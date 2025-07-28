@@ -2,16 +2,21 @@
     <div class="common-layout">
         <el-container>
             <el-header class="header">
-                <AppHeader />
+                <Header />
             </el-header>
             <el-container class="main-container">
                 <el-aside width="200px" class="aside">
                     <AppNavbar />
                 </el-aside>
                 <el-container class="main-content">
+                    <el-header class="header">
+                        <AppHeader />
+                    </el-header>
                     <el-main class="main">
                         <AppMain />
                     </el-main>
+
+
                 </el-container>
             </el-container>
         </el-container>
@@ -19,6 +24,7 @@
 </template>
 
 <script setup lang='ts'>
+import Header from "./Header";
 import AppHeader from "./AppHeader";
 import AppNavbar from "./AppNavbar";
 import AppMain from "./AppMain";

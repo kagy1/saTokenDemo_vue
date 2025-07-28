@@ -21,6 +21,33 @@ const router = createRouter({
           }
         }
       ]
+    }, {
+      path: '/Manager',
+      name: 'Manager',
+      redirect: '/Manager/user',
+      children: [
+        {
+          path: '/Manager/user',
+          name: 'user',
+          component: () => import('@/views/Manager/UserManager'),
+          meta: {
+            title: '用户管理',
+          }
+        }, {
+          path: '/Manager/role',
+          name: 'role',
+          component: () => import('@/views/Manager/RoleManager'),
+          meta: { title: '角色管理' }
+        }, {
+          path: '/Manager/menu',
+          name: 'menu',
+          component: () => import('@/views/Manager/MenuManager'),
+          meta: { title: '菜单管理' }
+        }
+      ],
+      meta: {
+        title: '系统管理',
+      }
     }
   ],
 })

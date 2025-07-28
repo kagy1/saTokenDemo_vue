@@ -5,7 +5,7 @@ export default defineComponent({
     setup() {
         return () => (
             <header class={style.header}>
-                <span class={style.title}>导航栏</span>
+                <span class={style.title}>saToken Demo</span>
             </header>
         );
     }
