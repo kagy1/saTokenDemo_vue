@@ -16,7 +16,7 @@ const router = createRouter({
           name: 'index',
           component: () => import('@/views/Main/index'),
           meta: {
-            title: '登录测试',
+            title: '测试',
           }
         }
       ]
