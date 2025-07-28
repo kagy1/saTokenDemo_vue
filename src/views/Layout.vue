@@ -1,14 +1,20 @@
 <template>
-    <div class="layout">
-        <div class="header">
-            <AppHeader />
-        </div>
-        <div class="navbar">
-            <AppNavbar />
-        </div>
-        <div class="main">
-            <AppMain />
-        </div>
+    <div class="common-layout">
+        <el-container>
+            <el-header class="header">
+                <AppHeader />
+            </el-header>
+            <el-container class="main-container">
+                <el-aside width="200px" class="aside">
+                    <AppNavbar />
+                </el-aside>
+                <el-container class="main-content">
+                    <el-main class="main">
+                        <AppMain />
+                    </el-main>
+                </el-container>
+            </el-container>
+        </el-container>
     </div>
 </template>
 
@@ -19,44 +25,35 @@ import AppMain from "./AppMain";
 </script>
 
 <style lang='scss' scoped>
-/* 头部 */
-.layout {
-    width: 100%;
+.common-layout {
+    height: 100vh;
+    width: 100vw;
+}
+
+.el-container {
     height: 100%;
 }
 
-.header {
-    position: absolute;
-    line-height: 50px;
-    height: 50px;
-    padding: 0px;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    background-color: aqua;
+.main-container {
+    height: calc(100vh - 60px); // 减去 header 的高度，根据实际调整
 }
 
-/* 左侧导航 */
-.navbar {
-    position: absolute;
-    width: 230px;
-    top: 50px;
-    /* 把上边header的部分让出来 */
-    left: 0px;
-    bottom: 0px;
-    overflow-y: auto;
-    /* 纵坐标滚动条 */
-    padding-right: 20px;
+.aside {
+    height: 100%;
 }
 
-/* 右侧主体区域 */
+.main-content {
+    height: 100%;
+}
+
 .main {
-    position: absolute;
-    top: 50px;
-    left: 230px;
-    /* 把左边navbar的部分让出来 */
-    right: 0px;
-    bottom: 0px;
-    overflow-y: auto;
+    height: 100%;
+}
+
+.header,
+.main,
+.aside {
+    padding: 0; // 重置 Element Plus 默认 padding
+    margin: 0;
 }
 </style>
