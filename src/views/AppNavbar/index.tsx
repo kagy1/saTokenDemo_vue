@@ -2,13 +2,25 @@ import { ElMenu, ElSubMenu, ElMenuItem } from "element-plus";
 import { defineComponent } from "vue";
 import style from "./style.module.scss";
 import { useRouter } from "vue-router";
+import * as ElementPlusIcons from '@element-plus/icons-vue';
 
 export default defineComponent({
     setup() {
         const router = useRouter();
+
         function toPage(route: any) {
-            if (route.name) router.push({ name: route.name });
+            if (route.name) {
+                router.push({ name: route.name });
+            }
         }
+
+        // 渲染图标组件
+        function renderIcon(iconName?: string) {
+            if (!iconName) return null;
+            const IconComponent = ElementPlusIcons[iconName as keyof typeof ElementPlusIcons];
+            return IconComponent ? <IconComponent /> : null;
+        }
+
         return () => (
             <nav class={style.navbar}>
                 <ElMenu
@@ -21,9 +33,14 @@ export default defineComponent({
                 >
                     {router.options.routes.map((route, index) => (
                         <ElSubMenu
-                            index={'' + index}
+                            index={String(index)}
                             v-slots={{
-                                title: () => <span>{route.meta?.title as string}</span>
+                                title: () => (
+                                    <div class={style.menuTitle}>
+                                        {renderIcon(route.meta?.icon as string)}
+                                        <span>{route.meta?.title as string}</span>
+                                    </div>
+                                )
                             }}
                         >
                             {route.children?.map(routeChild => (
@@ -31,7 +48,10 @@ export default defineComponent({
                                     index={routeChild.name as string}
                                     onClick={() => toPage(routeChild)}
                                 >
-                                    <span>{routeChild.meta?.title ?? "未定义"}</span>
+                                    <div class={style.menuItem}>
+                                        {renderIcon(routeChild.meta?.icon as string)}
+                                        <span>{routeChild.meta?.title ?? "未定义"}</span>
+                                    </div>
                                 </ElMenuItem>
                             ))}
                         </ElSubMenu>

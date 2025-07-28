@@ -17,6 +17,7 @@ const router = createRouter({
           component: () => import('@/views/Main/index'),
           meta: {
             title: '测试',
+            icon: 'User'
           }
         }
       ]
