@@ -9,7 +9,7 @@
                     <AppNavbar />
                 </el-aside>
                 <el-container class="main-content">
-                    <el-header class="header">
+                    <el-header class="header1">
                         <AppHeader />
                     </el-header>
                     <el-main class="main">
@@ -58,10 +58,20 @@ import AppMain from "./AppMain";
 
 .header,
 .main,
-.aside {
+.aside,
+.header1 {
     padding: 0; // 重置 Element Plus 默认 padding
     margin: 0;
-    width: auto; // 展开时的宽度
+}
 
+.aside {
+    width: auto;
+}
+
+.header1 {
+    padding: 0; // 重置 Element Plus 默认 padding
+    margin: 0;
+    height: 30px;
+    width: auto; // 展开时的宽度
 }
 </style>
