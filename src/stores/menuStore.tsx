@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-export const menuStore = defineStore('menuStore', () => {
+export const useMenuStore = defineStore('menuStore', () => {
     const collpase = ref(false)
-    const changeCollapse = (value: boolean) => {
+    const changeCollapse = () => {
         collpase.value = !collpase.value
     }
     return {
