@@ -7,14 +7,16 @@ import { Fold, Expand } from "@element-plus/icons-vue";
 export default defineComponent({
     setup() {
         const menuStore = useMenuStore()
-        const IconComponent = menuStore.collpase ? Expand : Fold
 
         return () => (
             <header class={style.header}>
                 <div onClick={menuStore.changeCollapse} style={{ cursor: 'pointer' }}>
-                    <ElIcon size={30}>
+                    <ElIcon size={25} style={{
+                        display: 'flex',
+                        alignItems: 'center'
+                    }} >
                         {
-                            menuStore.collpase ? <Expand /> : <Fold />
+                            menuStore.collapse ? <Expand /> : <Fold />
                         }
                     </ElIcon>
                 </div>

@@ -9,6 +9,7 @@ const router = createRouter({
       redirect: '/Main/index',
       meta: {
         title: 'Main',
+        icon: 'User'
       },
       children: [
         {
@@ -32,21 +33,23 @@ const router = createRouter({
           component: () => import('@/views/Manager/UserManager'),
           meta: {
             title: '用户管理',
+            icon: 'User'
           }
         }, {
           path: '/Manager/role',
           name: 'role',
           component: () => import('@/views/Manager/RoleManager'),
-          meta: { title: '角色管理' }
+          meta: { title: '角色管理', icon: 'User' }
         }, {
           path: '/Manager/menu',
           name: 'menu',
           component: () => import('@/views/Manager/MenuManager'),
-          meta: { title: '菜单管理' }
+          meta: { title: '菜单管理', icon: 'User' }
         }
       ],
       meta: {
         title: '系统管理',
+        icon: 'User'
       }
     }
   ],

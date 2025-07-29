@@ -3,6 +3,7 @@ import { defineComponent } from "vue";
 import style from "./style.module.scss";
 import { useRouter } from "vue-router";
 import * as ElementPlusIcons from '@element-plus/icons-vue';
+import { useMenuStore } from '@/stores/menuStore'
 
 export default defineComponent({
     setup() {
@@ -18,8 +19,11 @@ export default defineComponent({
         function renderIcon(iconName?: string) {
             if (!iconName) return null;
             const IconComponent = ElementPlusIcons[iconName as keyof typeof ElementPlusIcons];
-            return IconComponent ? <IconComponent /> : null;
+            return IconComponent ? <IconComponent class={style.menuIcon} /> : null;
         }
+
+        // 获取菜单折叠状态
+        const menuStore = useMenuStore()
 
         return () => (
             <nav class={style.navbar}>
@@ -29,31 +33,30 @@ export default defineComponent({
                     background-color="#f5f7fa"
                     text-color="#333"
                     class={style.menu}
-                    router
+                    collapse={menuStore.collapse}
                 >
                     {router.options.routes.map((route, index) => (
-                        <ElSubMenu
-                            index={String(index)}
-                            v-slots={{
+                        <ElSubMenu index={String(index)}>
+
+                            {{
                                 title: () => (
-                                    <div class={style.menuTitle}>
+                                    <>
                                         {renderIcon(route.meta?.icon as string)}
-                                        <span>{route.meta?.title as string}</span>
-                                    </div>
-                                )
+                                        <span class={style.menuSpan}>{route.meta?.title as string}</span>
+                                    </>
+                                ),
+                                default: () => route.children?.map(routeChild => (
+                                    <ElMenuItem
+                                        index={routeChild.name as string}
+                                        onClick={() => toPage(routeChild)}
+                                    >
+                                        <div class={style.menuItem}>
+                                            {renderIcon(routeChild.meta?.icon as string)}
+                                            <span>{routeChild.meta?.title ?? "未定义"}</span>
+                                        </div>
+                                    </ElMenuItem>
+                                ))
                             }}
-                        >
-                            {route.children?.map(routeChild => (
-                                <ElMenuItem
-                                    index={routeChild.name as string}
-                                    onClick={() => toPage(routeChild)}
-                                >
-                                    <div class={style.menuItem}>
-                                        {renderIcon(routeChild.meta?.icon as string)}
-                                        <span>{routeChild.meta?.title ?? "未定义"}</span>
-                                    </div>
-                                </ElMenuItem>
-                            ))}
                         </ElSubMenu>
                     ))}
                 </ElMenu>

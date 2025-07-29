@@ -1,8 +1,13 @@
 .header {
     display: flex;
     align-items: center;
-    height: 100%;
-    padding-left: 32px;
+    height: 30px;
+    padding-left: 20px;
     background: linear-gradient(90deg, #42a5f5 0%, #478ed1 100%);
     box-shadow: 0 2px 8px rgba(66, 165, 245, 0.08);
+}
+
+.header * {
+    margin: 0;
+    padding: 0;
 }
