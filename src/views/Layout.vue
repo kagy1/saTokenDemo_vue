@@ -12,6 +12,9 @@
                     <el-header class="header1">
                         <AppHeader />
                     </el-header>
+                    <div class="tab-container">
+                        <AppTab />
+                    </div>
                     <el-main class="main">
                         <AppMain />
                     </el-main>
@@ -28,6 +31,7 @@ import Header from "./Header";
 import AppHeader from "./AppHeader";
 import AppNavbar from "./AppNavbar";
 import AppMain from "./AppMain";
+import AppTab from "./AppTab"; 
 </script>
 
 <style lang='scss' scoped>
@@ -73,5 +77,10 @@ import AppMain from "./AppMain";
     margin: 0;
     height: 30px;
     width: auto; // 展开时的宽度
+}
+
+.tab-container {
+    height: 32px; // 选项卡高度
+    flex-shrink: 0;
 }
 </style>

@@ -4,18 +4,28 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/',
       name: 'Main',
-      path: '/Main',
-      redirect: '/Main/index',
+      component: () => import('@/views/Main/index'),
       meta: {
-        title: 'Main',
+        title: '首页',
+        icon: 'House',
+        keepTab: true
+      }
+    },
+    {
+      name: 'TestDemo',
+      path: '/TestDemo',
+      redirect: '/TestDemo/axiosTest',
+      meta: {
+        title: '测试',
         icon: 'User'
       },
       children: [
         {
-          path: '/Main/index',
-          name: 'index',
-          component: () => import('@/views/Main/index'),
+          path: '/TestDemo/axiosTest',
+          name: 'axiosTest',
+          component: () => import('@/views/TestDemo/axiosTest'),
           meta: {
             title: '测试',
             icon: 'User'

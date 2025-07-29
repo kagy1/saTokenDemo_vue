@@ -1,0 +1,106 @@
+/* components/AppTab.module.scss */
+.appTab {
+    width: 100%;
+    background: #fff;
+    border-bottom: 1px solid #e4e7ed;
+
+    :deep(.el-tabs) {
+        .el-tabs__header {
+            margin: 0;
+            padding: 0 16px;
+            background: #f5f7fa;
+            border-bottom: 1px solid #e4e7ed;
+
+            .el-tabs__nav-wrap {
+                &::after {
+                    display: none;
+                }
+            }
+
+            .el-tabs__nav {
+                border: none;
+            }
+
+            .el-tabs__item {
+                height: 32px;
+                line-height: 32px;
+                padding: 0 16px;
+                margin-right: 2px;
+                border: 1px solid #d1dbe5;
+                border-bottom: none;
+                background: #fff;
+                color: #909399;
+                font-size: 12px;
+                transition: all 0.3s;
+
+                &:hover {
+                    color: #409eff;
+                    background: #ecf5ff;
+                }
+
+                &.is-active {
+                    color: #409eff;
+                    background: #fff;
+                    border-color: #409eff;
+                    border-bottom-color: #fff;
+
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        left: 0;
+                        bottom: 0;
+                        width: 100%;
+                        height: 2px;
+                        background: #409eff;
+                    }
+                }
+
+                .el-tabs__close {
+                    position: static;
+                    font-size: 12px;
+                    margin-left: 8px;
+
+                    &:hover {
+                        background: #c0c4cc;
+                        color: #fff;
+                    }
+                }
+
+                &.is-closable {
+                    padding-right: 8px;
+
+                    .el-tabs__label {
+                        margin-right: 8px;
+                    }
+                }
+            }
+        }
+
+        .el-tabs__content {
+            display: none;
+        }
+    }
+}
+
+// 右键菜单样式
+:deep(.el-dropdown-menu) {
+    .el-dropdown-menu__item {
+        font-size: 12px;
+        padding: 8px 16px;
+
+        &:hover {
+            background: #ecf5ff;
+            color: #409eff;
+        }
+
+        &.is-disabled {
+            color: #c0c4cc;
+            cursor: not-allowed;
+
+            &:hover {
+                background: none;
+                color: #c0c4cc;
+            }
+        }
+    }
+}
