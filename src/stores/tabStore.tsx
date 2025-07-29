@@ -100,4 +100,9 @@ export const useTabStore = defineStore('tab', () => {
         closeAllTabs,
         getTabByName
     }
+}, {
+    persist: {
+        key: 'tab-store',
+        storage: localStorage
+    }
 })
