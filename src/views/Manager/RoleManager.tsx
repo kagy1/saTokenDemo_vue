@@ -1,4 +1,5 @@
-import { ElButton, ElForm, ElFormItem, ElInput, ElMain, ElMessage, ElMessageBox, FormInstance } from 'element-plus'
+import { addRoleApi } from '@/api/role'
+import { ElButton, ElForm, ElFormItem, ElInput, ElMain, ElMessage, ElMessageBox, type FormInstance } from 'element-plus'
 import { defineComponent, Fragment, ref } from 'vue'
 
 export default defineComponent({
@@ -123,8 +124,7 @@ export default defineComponent({
                 // 这里添加你的API调用逻辑
                 console.log('创建角色:', addModel.value)
 
-                // 模拟API调用
-                // const result = await createRoleApi(addModel.value)
+                const result = await addRoleApi(addModel.value)
 
                 ElMessage.success('角色创建成功')
 
