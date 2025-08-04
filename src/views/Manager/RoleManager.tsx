@@ -1,7 +1,8 @@
 import { addRoleApi, getListApi } from '@/api/role'
-import { ElButton, ElForm, ElFormItem, ElInput, ElMain, ElMessage, ElMessageBox, type FormInstance } from 'element-plus'
-import { defineComponent, Fragment, ref } from 'vue'
+import { ElButton, ElForm, ElFormItem, ElInput, ElMain, ElMessage, ElMessageBox, ElPagination, ElTable, ElTableColumn, type FormInstance } from 'element-plus'
+import { defineComponent, Fragment, onMounted, ref } from 'vue'
 import type { RoleItem } from "@/api/role/type";
+import { de } from 'element-plus/es/locales.mjs';
 
 export default defineComponent({
     setup(props, { slots, expose, emit, attrs }) {
@@ -113,6 +114,7 @@ export default defineComponent({
                     </ElForm>
                 )
             }).then(() => {
+                getList()
                 // 确认创建后的处理已在 beforeClose 中完成
             }).catch(() => {
                 // 取消时重置表单
@@ -161,9 +163,37 @@ export default defineComponent({
             let res = await getListApi(searchParm.value)
             if (res && res.records) {
                 tableList.value = res.records
+                searchParm.value.total = res.total
+
             }
         }
 
+
+        // 编辑按钮
+        const editBtn = (row: RoleItem) => {
+            throw new Error('Function not implemented.');
+        }
+
+        // 删除按钮
+        const deleteBtn = (roleId: string) => {
+            throw new Error('Function not implemented.');
+        }
+
+        // 分页页容量改变时触发
+        const sizeChange = (size: number) => {
+            searchParm.value.pageSize = size
+            getList()
+        }
+
+        // 分页页码改变时触发
+        const currentChange = (page: number) => {
+            searchParm.value.currentPage = page
+            getList()
+        }
+
+        onMounted(() => {
+            getList()
+        })
 
         return () => (
             <div>
@@ -181,8 +211,30 @@ export default defineComponent({
                             <ElButton icon="Close" type="danger" onClick={resetBtn}>重置</ElButton>
                             <ElButton icon="Plus" type="primary" onClick={addBtn}>新增</ElButton>
                         </ElFormItem>
-                        <ElButton onClick={getList}></ElButton>
                     </ElForm>
+                    <ElTable data={tableList.value} border stripe>
+                        <ElTableColumn prop="roleName" label="角色名称" ></ElTableColumn>
+                        <ElTableColumn prop="remark" label="备注" ></ElTableColumn>
+                        <ElTableColumn prop="remark" label="操作" align='center'>
+                            {{
+                                default: (scope: any) => (
+                                    <>
+                                        <ElButton type="primary" icon="edit" onClick={() => { editBtn(scope.row) }}>编辑</ElButton>
+                                        <ElButton type="danger" icon="delete" onClick={() => { deleteBtn(scope.row.rowId) }}>删除</ElButton>
+                                    </>
+                                )
+                            }}
+                        </ElTableColumn>
+                    </ElTable>
+                    <ElPagination
+                        v-model:current-page={searchParm.value.currentPage}
+                        v-model:page-size={searchParm.value.pageSize}
+                        onSize-change={sizeChange}
+                        onCurrent-change={currentChange}
+                        page-sizes={[10, 20, 40, 60, 80, 100]}
+                        total={searchParm.value.total}
+                        layout="total, sizes, prev, pager, next, jumper"
+                    ></ElPagination>
                 </ElMain>
             </div>
         )
