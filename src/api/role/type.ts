@@ -6,3 +6,25 @@ export type SysRole = {
     /**备注 */
     remark: string
 }
+
+// 列表查询参数
+export type RoleListParam = {
+    /**当前页 */
+    currentPage: number
+    /**每页条数 */
+    pageSize: number
+    /**角色名称 */
+    roleName?: string
+    /**总条数 */
+    total: number
+}
+
+
+export interface RoleItem {
+    roleId: number
+    roleName: string
+    type: string | null
+    remark: string | null
+    createTime: string | null
+    updateTime: string | null
+}

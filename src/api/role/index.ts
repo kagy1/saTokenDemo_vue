@@ -1,6 +1,21 @@
 import request from '@/http/index'
-import type { SysRole } from './type'
+import type { RoleListParam, SysRole } from './type'
 
-export const addRoleApi = (parm: SysRole) => {
-    return request.post("/api/role", parm)
+// 定义分页列表响应类型
+interface PageResponse<T = any> {
+    records: T[]
+    total: number
+    current: number
+    size: number
+    pages: number
+}
+
+// 定义角色项类型
+
+export const addRoleApi = (param: SysRole) => {
+    return request.post("/api/role", param)
+}
+
+export const getListApi = (param: RoleListParam): Promise<PageResponse> => {
+    return request.get("/api/role/getList", { params: param })
 }

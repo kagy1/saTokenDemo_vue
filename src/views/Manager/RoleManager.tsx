@@ -1,6 +1,7 @@
-import { addRoleApi } from '@/api/role'
+import { addRoleApi, getListApi } from '@/api/role'
 import { ElButton, ElForm, ElFormItem, ElInput, ElMain, ElMessage, ElMessageBox, type FormInstance } from 'element-plus'
 import { defineComponent, Fragment, ref } from 'vue'
+import type { RoleItem } from "@/api/role/type";
 
 export default defineComponent({
     setup(props, { slots, expose, emit, attrs }) {
@@ -9,7 +10,8 @@ export default defineComponent({
         const searchParm = ref({
             currentPage: 1,
             pageSize: 10,
-            roleName: ''
+            roleName: '',
+            total: 10
         })
 
         // 定义新增角色弹窗的对象
@@ -151,6 +153,18 @@ export default defineComponent({
             searchBtn()
         }
 
+        // 表格数据
+        const tableList = ref<RoleItem[]>([])
+
+        // 查询列表
+        const getList = async () => {
+            let res = await getListApi(searchParm.value)
+            if (res && res.records) {
+                tableList.value = res.records
+            }
+        }
+
+
         return () => (
             <div>
                 <ElMain>
@@ -167,6 +181,7 @@ export default defineComponent({
                             <ElButton icon="Close" type="danger" onClick={resetBtn}>重置</ElButton>
                             <ElButton icon="Plus" type="primary" onClick={addBtn}>新增</ElButton>
                         </ElFormItem>
+                        <ElButton onClick={getList}></ElButton>
                     </ElForm>
                 </ElMain>
             </div>
