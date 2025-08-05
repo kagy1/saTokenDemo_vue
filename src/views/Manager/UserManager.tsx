@@ -1,4 +1,4 @@
-import { ElButton, ElForm, ElFormItem, ElInput, ElMain, ElMessage, ElMessageBox, ElPagination, ElTable, ElTableColumn, type FormInstance, type FormRules } from 'element-plus'
+import { ElButton, ElForm, ElFormItem, ElInput, ElMain, ElMessage, ElMessageBox, ElPagination, ElSwitch, ElTable, ElTableColumn, type FormInstance, type FormRules } from 'element-plus'
 import { defineComponent, Fragment, onMounted, ref } from 'vue'
 import { $confirm } from '@/utils/confirm'
 import type { SysUser, UserListParam } from '@/api/user/type'
@@ -24,7 +24,8 @@ export default defineComponent({
             nickName: '',
             email: '',
             phone: '',
-            password: ''
+            password: '',
+            sex:'男'
         })
 
         // 定义编辑用户弹窗的对象
@@ -33,7 +34,8 @@ export default defineComponent({
             username: '',
             nickName: '',
             email: '',
-            phone: ''
+            phone: '',
+            sex:'男'
         })
 
         // 新增表单的ref属性
@@ -101,7 +103,8 @@ export default defineComponent({
                 nickName: '',
                 email: '',
                 phone: '',
-                password: ''
+                password: '',
+                sex: '男'
             }
             // 清除表单验证状态
             addRef.value?.clearValidate()
@@ -158,6 +161,16 @@ export default defineComponent({
                                 v-model={addModel.value.nickName}
                                 placeholder="请输入昵称"
                                 clearable
+                            />
+                        </ElFormItem>
+                        <ElFormItem label="性别" prop="sex">
+                            <ElSwitch
+                                v-model={addModel.value.sex}
+                                active-text="女"
+                                inactive-text="男"
+                                active-value="女"
+                                inactive-value="男"
+                                inline-prompt
                             />
                         </ElFormItem>
                         <ElFormItem label="邮箱" prop="email">
@@ -236,7 +249,8 @@ export default defineComponent({
                 username: '',
                 nickName: '',
                 email: '',
-                phone: ''
+                phone: '',
+                sex: '男'
             }
             // 清除表单验证状态
             editRef.value?.clearValidate()
@@ -331,6 +345,16 @@ export default defineComponent({
                                 v-model={editModel.value.nickName}
                                 placeholder="请输入昵称"
                                 clearable
+                            />
+                        </ElFormItem>
+                        <ElFormItem label="性别" prop="sex">
+                            <ElSwitch
+                                v-model={editModel.value.sex}
+                                active-text="女"
+                                inactive-text="男"
+                                active-value="女"
+                                inactive-value="男"
+                                inline-prompt
                             />
                         </ElFormItem>
                         <ElFormItem label="邮箱" prop="email">
@@ -428,6 +452,7 @@ export default defineComponent({
                     <ElTable data={tableList.value} border stripe>
                         <ElTableColumn prop="username" label="用户名"></ElTableColumn>
                         <ElTableColumn prop="nickName" label="昵称"></ElTableColumn>
+                        <ElTableColumn prop="sex" label="性别" width="80"></ElTableColumn>
                         <ElTableColumn prop="email" label="邮箱"></ElTableColumn>
                         <ElTableColumn prop="phone" label="手机号"></ElTableColumn>
                         <ElTableColumn prop="createTime" label="创建时间" width="180">

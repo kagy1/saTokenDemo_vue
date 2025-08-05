@@ -8,6 +8,7 @@ export interface SysUser {
     password?: string
     createTime?: string
     updateTime?: string
+    sex?: string
 }
 
 export type UserListParam = {
