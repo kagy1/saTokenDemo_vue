@@ -1,7 +1,7 @@
-import { addRoleApi, getListApi } from '@/api/role'
+import { addRoleApi, editApi, getListApi } from '@/api/role'
 import { ElButton, ElForm, ElFormItem, ElInput, ElMain, ElMessage, ElMessageBox, ElPagination, ElTable, ElTableColumn, type FormInstance } from 'element-plus'
 import { defineComponent, Fragment, onMounted, ref } from 'vue'
-import type { RoleItem } from "@/api/role/type";
+import type { RoleItem, SysRole } from "@/api/role/type";
 import { de } from 'element-plus/es/locales.mjs';
 
 export default defineComponent({
@@ -22,8 +22,16 @@ export default defineComponent({
             remark: ''
         })
 
+         // 定义编辑角色弹窗的对象
+        const editModel = ref({
+            roleId: '',
+            roleName: '',
+            remark: ''
+        })
+
         // 新增表单的ref属性
         const addRef = ref<FormInstance>()
+        const editRef = ref<FormInstance>()
 
         // 表单验证规则
         const rules = ref({
@@ -155,6 +163,17 @@ export default defineComponent({
             searchBtn()
         }
 
+        // 重置编辑表单
+        const resetEditForm = () => {
+            editModel.value = {
+                roleId: '',
+                roleName: '',
+                remark: ''
+            }
+            // 清除表单验证状态
+            editRef.value?.clearValidate()
+        }
+
         // 表格数据
         const tableList = ref<RoleItem[]>([])
 
@@ -168,10 +187,91 @@ export default defineComponent({
             }
         }
 
+        // 更新角色的具体逻辑
+        const updateRole = async () => {
+            try {
+                console.log('更新角色:', editModel.value)
+
+                const result = await editApi(editModel.value)
+
+                ElMessage.success('角色更新成功')
+
+                // 更新成功后刷新列表
+                getList()
+
+                // 重置表单
+                resetEditForm()
+
+            } catch (error) {
+                console.error('更新角色失败:', error)
+                ElMessage.error('更新角色失败，请重试')
+            }
+        }
+
 
         // 编辑按钮
-        const editBtn = (row: RoleItem) => {
-            throw new Error('Function not implemented.');
+        const editBtn = (row: SysRole) => {
+            // 设置编辑表单的初始值
+            Object.assign(editModel.value, row)
+
+            ElMessageBox({
+                title: '编辑角色',
+                showCancelButton: true,
+                confirmButtonText: '保存',
+                cancelButtonText: '取消',
+                showClose: true,
+                closeOnClickModal: false,
+                closeOnPressEscape: false,
+                beforeClose: (action, instance, done) => {
+                    if (action === 'confirm') {
+                        // 验证表单
+                        editRef.value?.validate((valid) => {
+                            if (valid) {
+                                // 表单验证通过，执行编辑逻辑
+                                updateRole()
+                                done()
+                            } else {
+                                // 表单验证失败，不关闭弹窗
+                                ElMessage.error('请检查表单输入')
+                            }
+                        })
+                    } else {
+                        // 取消或关闭时直接关闭弹窗
+                        done()
+                    }
+                },
+                message: () => (
+                    <ElForm
+                        ref={editRef}
+                        model={editModel.value} // 修改：绑定到 editModel
+                        rules={rules.value}
+                        label-width="80px"
+                        size="default"
+                    >
+                        <ElFormItem label="角色名称" prop="roleName">
+                            <ElInput
+                                v-model={editModel.value.roleName} // 修改：绑定到 editModel
+                                placeholder="请输入角色名称"
+                                clearable
+                            />
+                        </ElFormItem>
+                        <ElFormItem label="备注" prop="remark">
+                            <ElInput
+                                v-model={editModel.value.remark} // 修改：绑定到 editModel
+                                type="textarea"
+                                placeholder="请输入备注信息"
+                                rows={3}
+                                maxlength={200}
+                                show-word-limit
+                                clearable
+                            />
+                        </ElFormItem>
+                    </ElForm>
+                )
+            }).then(() => {
+                // 确认保存后刷新列表
+                getList()
+            })
         }
 
         // 删除按钮

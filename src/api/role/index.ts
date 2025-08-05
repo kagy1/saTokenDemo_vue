@@ -19,3 +19,7 @@ export const addRoleApi = (param: SysRole) => {
 export const getListApi = (param: RoleListParam): Promise<PageResponse> => {
     return request.get("/api/role/getList", { params: param })
 }
+
+export const editApi = (param: SysRole) => {
+    return request.put("/api/role", param)
+}
