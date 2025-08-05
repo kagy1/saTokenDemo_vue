@@ -180,8 +180,6 @@ service.interceptors.response.use(
     }
 )
 
-export default service
-
 // 请求配置接口
 interface RequestConfig {
     showLoading?: boolean

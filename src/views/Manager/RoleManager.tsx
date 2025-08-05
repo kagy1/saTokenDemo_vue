@@ -180,6 +180,8 @@ export default defineComponent({
 
         // 查询列表
         const getList = async () => {
+            console.log("1------");
+            console.log(searchParm.value);
             let res = await getListApi(searchParm.value)
             if (res && res.records) {
                 tableList.value = res.records
