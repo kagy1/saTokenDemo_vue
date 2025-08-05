@@ -320,7 +320,7 @@ export default defineComponent({
                         </ElFormItem>
                         <ElFormItem>
                             <ElButton icon="Search" onClick={searchBtn}>搜索</ElButton>
-                            <ElButton icon="Close" type="danger" onClick={resetBtn}>重置</ElButton>
+                            <ElButton icon="refresh" onClick={resetBtn}>重置</ElButton>
                             <ElButton icon="Plus" type="primary" onClick={addBtn}>新增</ElButton>
                         </ElFormItem>
                     </ElForm>
