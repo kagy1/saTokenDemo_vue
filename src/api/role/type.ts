@@ -21,7 +21,7 @@ export type RoleListParam = {
 
 
 export interface RoleItem {
-    roleId: number
+    roleId: string
     roleName: string
     type: string | null
     remark: string | null

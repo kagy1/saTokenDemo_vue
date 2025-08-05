@@ -1,8 +1,9 @@
-import { addRoleApi, editApi, getListApi } from '@/api/role'
+import { addRoleApi, deleteRoleApi, editRoleApi, getListApi } from '@/api/role'
 import { ElButton, ElForm, ElFormItem, ElInput, ElMain, ElMessage, ElMessageBox, ElPagination, ElTable, ElTableColumn, type FormInstance } from 'element-plus'
 import { defineComponent, Fragment, onMounted, ref } from 'vue'
 import type { RoleItem, SysRole } from "@/api/role/type";
 import { de } from 'element-plus/es/locales.mjs';
+import { $confirm } from '@/utils/confirm';
 
 export default defineComponent({
     setup(props, { slots, expose, emit, attrs }) {
@@ -192,7 +193,7 @@ export default defineComponent({
             try {
                 console.log('更新角色:', editModel.value)
 
-                const result = await editApi(editModel.value)
+                const result = await editRoleApi(editModel.value)
 
                 ElMessage.success('角色更新成功')
 
@@ -275,8 +276,19 @@ export default defineComponent({
         }
 
         // 删除按钮
-        const deleteBtn = (roleId: string) => {
-            throw new Error('Function not implemented.');
+        const deleteBtn = async (roleId: string) => {
+            try {
+                const confirmed = await $confirm('是否确认删除该角色？', '删除角色')
+                if (confirmed) {
+                    await deleteRoleApi(roleId)
+                    ElMessage.success('删除成功')
+                    // 删除成功后刷新列表
+                    getList()
+                }
+            } catch (error) {
+                console.error('删除失败:', error)
+                ElMessage.error('删除失败，请重试')
+            }
         }
 
         // 分页页容量改变时触发
@@ -320,7 +332,7 @@ export default defineComponent({
                                 default: (scope: any) => (
                                     <>
                                         <ElButton type="primary" icon="edit" onClick={() => { editBtn(scope.row) }}>编辑</ElButton>
-                                        <ElButton type="danger" icon="delete" onClick={() => { deleteBtn(scope.row.rowId) }}>删除</ElButton>
+                                        <ElButton type="danger" icon="delete" onClick={() => { deleteBtn(scope.row.roleId) }}>删除</ElButton>
                                     </>
                                 )
                             }}
