@@ -1,8 +1,9 @@
-import { ElButton, ElForm, ElFormItem, ElInput, ElMain, ElMessage, ElMessageBox, ElPagination, ElSwitch, ElTable, ElTableColumn, type FormInstance, type FormRules } from 'element-plus'
+import { ElButton, ElForm, ElFormItem, ElInput, ElMain, ElMessage, ElMessageBox, ElOption, ElPagination, ElSelect, ElSwitch, ElTable, ElTableColumn, type FormInstance, type FormRules } from 'element-plus'
 import { defineComponent, Fragment, onMounted, ref } from 'vue'
 import { $confirm } from '@/utils/confirm'
-import type { SysUser, UserListParam } from '@/api/user/type'
-import { addUserApi, deleteUserApi, editUserApi, getUserListApi } from '@/api/user'
+import type { Role, SysUser, UserListParam } from '@/api/user/type'
+import { addUserApi, deleteUserApi, editUserApi, getUserListApi, resetPasswordApi } from '@/api/user'
+import { getSelectApi } from '@/api/role'
 
 export default defineComponent({
     setup(props, { slots, expose, emit, attrs }) {
@@ -25,7 +26,8 @@ export default defineComponent({
             email: '',
             phone: '',
             password: '',
-            sex:'男'
+            sex:'男',
+            roleIds: []
         })
 
         // 定义编辑用户弹窗的对象
@@ -35,8 +37,12 @@ export default defineComponent({
             nickName: '',
             email: '',
             phone: '',
-            sex:'男'
+            sex:'男',
+            roleIds: []
         })
+
+        // 角色列表
+        const roleList = ref<Role[]>([])
 
         // 新增表单的ref属性
         const addRef = ref<FormInstance>()
@@ -104,7 +110,8 @@ export default defineComponent({
                 email: '',
                 phone: '',
                 password: '',
-                sex: '男'
+                sex: '男',
+                roleIds: []
             }
             // 清除表单验证状态
             addRef.value?.clearValidate()
@@ -196,6 +203,26 @@ export default defineComponent({
                                 clearable
                             />
                         </ElFormItem>
+                        <ElFormItem label="用户角色" prop="roleIds">
+                            <ElSelect
+                                v-model={addModel.value.roleIds}
+                                placeholder="请选择用户角色"
+                                multiple
+                                collapse-tags
+                                collapse-tags-tooltip
+                                clearable
+                                style={{ width: '100%' }}
+                            >
+                                {roleList.value.map(role => (
+                                    <ElOption
+                                        key={role.value}          // 改为 value
+                                        label={role.label}        // 改为 label
+                                        value={role.value}        // 改为 value
+                                    />
+                                ))}
+                            </ElSelect>
+                        </ElFormItem>
+                        
                     </ElForm>
                 )
             }).then(() => {
@@ -250,7 +277,8 @@ export default defineComponent({
                 nickName: '',
                 email: '',
                 phone: '',
-                sex: '男'
+                sex: '男',
+                roleIds: []
             }
             // 清除表单验证状态
             editRef.value?.clearValidate()
@@ -293,6 +321,17 @@ export default defineComponent({
                 ElMessage.error('更新用户失败，请重试')
             }
         }
+
+        // 根据角色ID数组获取角色名称
+        const getRoleNames = (roleIds: number[]) => {
+            if (!roleIds || roleIds.length === 0) return '-'
+            const names = roleIds.map(id => {
+                const role = roleList.value.find(r => r.value === id)
+                return role ? role.label : id.toString()
+            })
+            return names.join(', ')
+        }
+
 
         // 编辑按钮
         const editBtn = (row: SysUser) => {
@@ -371,6 +410,25 @@ export default defineComponent({
                                 clearable
                             />
                         </ElFormItem>
+                         <ElFormItem label="用户角色" prop="roleIds">
+                            <ElSelect
+                                v-model={editModel.value.roleIds}
+                                placeholder="请选择用户角色"
+                                multiple
+                                collapse-tags
+                                collapse-tags-tooltip
+                                clearable
+                                style={{ width: '100%' }}
+                            >
+                                {roleList.value.map(role => (
+                                    <ElOption
+                                        key={role.value}          // 改为 value
+                                        label={role.label}        // 改为 label
+                                        value={role.value}        // 改为 value
+                                    />
+                                ))}
+                            </ElSelect>
+                        </ElFormItem>
                     </ElForm>
                 )
             }).then(() => {
@@ -395,6 +453,21 @@ export default defineComponent({
             }
         }
 
+        const resetPasswordBtn = async (user: SysUser) => {
+            try {
+                await $confirm('是否确认重置密码？', '重置密码为123456')
+                let res = await resetPasswordApi(user)
+                ElMessage.success('密码重置成功')
+                // 如果需要的话，可以刷新列表
+                // getList()
+            } catch (error) {
+                if (error !== 'cancel') {
+                    console.error('重置密码失败:', error)
+                    ElMessage.error('重置密码失败，请重试')
+                }
+            }
+        }
+
         // 分页页容量改变时触发
         const sizeChange = (size: number) => {
             searchParm.value.pageSize = size
@@ -407,8 +480,23 @@ export default defineComponent({
             getList()
         }
 
+
+        // 查询角色下拉数据
+        const getSelect = async () => {
+            try {
+                let res = await getSelectApi()
+                if (res) {
+                    roleList.value = res
+                }
+            } catch (error) {
+                console.error('获取角色列表失败:', error)
+                ElMessage.error('获取角色列表失败')
+            }
+        }
+
         onMounted(() => {
             getList()
+            getSelect() // 加载角色数据
         })
 
         return () => (
@@ -455,6 +543,14 @@ export default defineComponent({
                         <ElTableColumn prop="sex" label="性别" width="80"></ElTableColumn>
                         <ElTableColumn prop="email" label="邮箱"></ElTableColumn>
                         <ElTableColumn prop="phone" label="手机号"></ElTableColumn>
+                        {/* 添加角色列 */}
+                        <ElTableColumn prop="roleIds" label="用户角色" width="200">
+                            {{
+                                default: (scope: any) => (
+                                    <span>{getRoleNames(scope.row.roleIds)}</span>
+                                )
+                            }}
+                        </ElTableColumn>
                         <ElTableColumn prop="createTime" label="创建时间" width="180">
                             {{
                                 default: (scope: any) => (
@@ -462,16 +558,18 @@ export default defineComponent({
                                 )
                             }}
                         </ElTableColumn>
-                        <ElTableColumn label="操作" align="center" width="200">
+                        <ElTableColumn label="操作" align="center" width="400">
                             {{
                                 default: (scope: any) => (
                                     <>
                                         <ElButton type="primary" icon="edit" onClick={() => { editBtn(scope.row) }}>编辑</ElButton>
                                         <ElButton type="danger" icon="delete" onClick={() => { deleteBtn(scope.row.userId) }}>删除</ElButton>
+                                        <ElButton type="warning" icon="refresh" onClick={()=>{resetPasswordBtn(scope.row)}}>重置密码</ElButton>
                                     </>
                                 )
                             }}
                         </ElTableColumn>
+                        
                     </ElTable>
                     <ElPagination
                         v-model:current-page={searchParm.value.currentPage}

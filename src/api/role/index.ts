@@ -1,4 +1,4 @@
-import {request} from "@/http/index";
+import { request } from "@/http/index";
 import type { RoleListParam, SysRole } from "./type";
 
 // 定义分页列表响应类型
@@ -17,7 +17,7 @@ export const addRoleApi = (param: SysRole) => {
 };
 
 export const getListApi = (param: RoleListParam): Promise<PageResponse> => {
-    return request.get("/api/role/getList", param );
+    return request.get("/api/role/getList", param);
 };
 
 export const editRoleApi = (param: SysRole) => {
@@ -25,5 +25,9 @@ export const editRoleApi = (param: SysRole) => {
 };
 
 export const deleteRoleApi = (roleId: string) => {
-    return request.delete(`/api/role/${roleId}`, );
+    return request.delete(`/api/role/${roleId}`,);
 };
+
+export const getSelectApi = () => {
+    return request.post("/api/role/selectList");
+}

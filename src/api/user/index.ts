@@ -25,3 +25,7 @@ export const editUserApi = (param: SysUser) => {
 export const deleteUserApi = (userId: number) => {
     return request.delete(`/api/sysUser/${userId}`);
 };
+
+export const resetPasswordApi = (param: SysUser) => {
+    return request.post(`/api/sysUser/resetPassword`, param);
+}

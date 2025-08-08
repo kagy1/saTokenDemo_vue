@@ -9,6 +9,7 @@ export interface SysUser {
     createTime?: string
     updateTime?: string
     sex?: string
+    roleIds?: []
 }
 
 export type UserListParam = {
@@ -19,4 +20,11 @@ export type UserListParam = {
     email?: string
     phone?: string
     total: number
+}
+
+// 定义角色类型
+export interface Role {
+    value: number      // 改为 value
+    label: string      // 改为 label
+    check?: boolean
 }
