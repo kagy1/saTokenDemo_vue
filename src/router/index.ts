@@ -14,6 +14,17 @@ const router = createRouter({
       }
     },
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/login/index.vue'),
+      meta: {
+        title: '登录',
+        icon: 'House',
+        keepTab: true
+      }
+
+    },
+    {
       name: 'TestDemo',
       path: '/TestDemo',
       redirect: '/TestDemo/axiosTest',
