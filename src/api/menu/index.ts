@@ -19,3 +19,8 @@ export const getListApi = () => {
 export const editApi = (param: MenuType) => {
     return request.put("/api/sysMenu", param);
 }
+
+// 删除
+export const deleteApi = (menuId: string) => {
+    return request.delete(`/api/sysMenu/${menuId}`);
+}

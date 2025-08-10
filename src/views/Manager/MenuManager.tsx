@@ -1,4 +1,4 @@
-import { addApi, getListApi, getParentApi, editApi } from '@/api/menu'
+import { addApi, getListApi, getParentApi, editApi, deleteApi } from '@/api/menu'
 import type { MenuType } from '@/api/menu/type'
 import { $confirm } from '@/utils/confirm'
 import { ElButton, ElCol, ElForm, ElFormItem, ElIcon, ElInput, ElMain, ElMessage, ElMessageBox, ElRadio, ElRadioGroup, ElRow, ElTable, ElTableColumn, ElTag, ElTreeSelect, type FormInstance } from 'element-plus'
@@ -267,8 +267,19 @@ export default defineComponent({
         }
 
         // 删除
-        const deleteBtn = (menuId: string) => {
-            console.log("deleteBtn", menuId);
+        const deleteBtn = async (menuId: string) => {
+            try {
+                await $confirm('确认删除该菜单吗？')
+                await deleteApi(menuId);
+                ElMessage.success('删除成功')
+                getList() // 刷新列表
+            } catch (error) {
+                // 用户取消删除或删除失败都会进入这里
+                if (error !== 'cancel') {
+                    // 只有在真正的错误时才显示错误信息
+                    console.error('删除失败', error)
+                }
+            }
         }
 
         onMounted(() => {
