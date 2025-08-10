@@ -37,10 +37,11 @@ const rules = {
 
 <style lang="scss" scoped>
 .loginContainer{
-    height: 100vh; // 改为视口高度
+    width:100%;
+    height: 100%; 
     background-color:#fff;
     background: url('@/assets/loginBackImg.jpg');
-    background-size: cover; // 添加背景图片适配
+    background-size: cover; 
     background-position: center;
     display: flex;
     justify-content: center;
@@ -52,7 +53,7 @@ const rules = {
         padding: 20px 30px;
         border-radius: 10px;
         background-color: #fff;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1); // 添加阴影效果
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         
         .loginTitle{
             display: flex;

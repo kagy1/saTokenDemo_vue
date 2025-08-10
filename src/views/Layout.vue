@@ -18,8 +18,6 @@
                     <el-main class="main">
                         <AppMain />
                     </el-main>
-
-
                 </el-container>
             </el-container>
         </el-container>
@@ -38,6 +36,7 @@ import AppTab from "./AppTab";
 .common-layout {
     height: 100vh;
     width: 100vw;
+    overflow: hidden;
 }
 
 .el-container {
@@ -45,7 +44,7 @@ import AppTab from "./AppTab";
 }
 
 .main-container {
-    height: calc(100vh - 60px); // 减去 header 的高度，根据实际调整
+    height: calc(100vh - 60px);
 }
 
 .aside {
@@ -56,15 +55,20 @@ import AppTab from "./AppTab";
     height: 100%;
 }
 
+/* --- 主要修改点在这里 --- */
 .main {
-    height: 100%;
+    padding: 0;
+    margin: 0;
+    /* 1. 将 el-main 设置为 flex 容器 */
+    display: flex;
+    /* 2. 确保其子元素垂直排列 */
+    flex-direction: column;
 }
 
 .header,
-.main,
 .aside,
 .header1 {
-    padding: 0; // 重置 Element Plus 默认 padding
+    padding: 0;
     margin: 0;
 }
 
@@ -73,14 +77,12 @@ import AppTab from "./AppTab";
 }
 
 .header1 {
-    padding: 0; // 重置 Element Plus 默认 padding
-    margin: 0;
     height: 30px;
-    width: auto; // 展开时的宽度
+    width: auto;
 }
 
 .tab-container {
-    height: 32px; // 选项卡高度
+    height: 32px;
     flex-shrink: 0;
 }
 </style>
