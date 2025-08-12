@@ -1,6 +1,7 @@
 .header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     height: 100%;
     padding-left: 32px;
     background: linear-gradient(90deg, #42a5f5 0%, #478ed1 100%);
@@ -13,4 +14,47 @@
     font-weight: bold;
     color: #fff;
     letter-spacing: 2px;
+}
+
+.userActions {
+    margin-right: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+}
+
+.avatar {
+    margin-right: 8px;
+    background-color: #409eff;
+    color: white;
+    font-weight: 500;
+}
+
+.userName {
+    font-size: 14px;
+    color: #333;
+    margin-right: 4px;
+}
+
+.menuItem {
+    display: flex;
+    align-items: center;
+
+    .icon {
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+    }
 }

@@ -37,7 +37,13 @@ export type LoginType = {
 }
 
 // 菜单树参数
-export type AssignParm = {
+export type AssignParam = {
     roleId: string
     userId: string
+}
+
+export type UpdateParam = {
+    userId: string
+    password: string
+    oldPassword: string
 }

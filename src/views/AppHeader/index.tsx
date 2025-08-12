@@ -38,7 +38,7 @@ export default defineComponent({
                         </ElBreadcrumbItem>
                     ))}
                 </ElBreadcrumb>
-            </header >
+            </header>
         );
     }
 });
