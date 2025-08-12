@@ -53,7 +53,7 @@ const service = axios.create({
     headers: {
         'Content-Type': 'application/json;charset=UTF-8'
     },
-    withCredentials: false
+    withCredentials: true
 })
 
 // Token管理

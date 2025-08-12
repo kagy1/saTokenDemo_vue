@@ -28,3 +28,16 @@ export interface Role {
     label: string      // 改为 label
     check?: boolean
 }
+
+// 登录
+export type LoginType = {
+    username: string
+    password: string
+    code: string
+}
+
+// 菜单树参数
+export type AssignParm = {
+    roleId: string
+    userId: string
+}

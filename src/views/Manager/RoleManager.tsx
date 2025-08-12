@@ -4,6 +4,7 @@ import { defineComponent, Fragment, onMounted, ref } from 'vue'
 import type { RoleItem, SysRole } from "@/api/role/type";
 import { de } from 'element-plus/es/locales.mjs';
 import { $confirm } from '@/utils/confirm';
+import { showAssignTree } from './AssignTree';
 
 export default defineComponent({
     setup(props, { slots, expose, emit, attrs }) {
@@ -309,6 +310,10 @@ export default defineComponent({
             getList()
         })
 
+        const assignBtn = (row: SysRole) => {
+            showAssignTree(row.roleId,row.roleName);
+        }
+
         return () => (
             <div>
                 <ElMain>
@@ -334,6 +339,7 @@ export default defineComponent({
                                 default: (scope: any) => (
                                     <>
                                         <ElButton type="primary" icon="edit" onClick={() => { editBtn(scope.row) }}>编辑</ElButton>
+                                        <ElButton type='primary' icon="setting" onClick={()=>assignBtn(scope.row)}>分配权限</ElButton>
                                         <ElButton type="danger" icon="delete" onClick={() => { deleteBtn(scope.row.roleId) }}>删除</ElButton>
                                     </>
                                 )

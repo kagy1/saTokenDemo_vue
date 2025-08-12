@@ -1,5 +1,5 @@
 import { request } from "@/http";
-import type { SysUser, UserListParam } from '@/api/user/type';
+import type { SysUser, UserListParam, LoginType, AssignParm } from '@/api/user/type';
 
 interface PageResponse<T = any> {
     records: T[];
@@ -28,4 +28,19 @@ export const deleteUserApi = (userId: number) => {
 
 export const resetPasswordApi = (param: SysUser) => {
     return request.post(`/api/sysUser/resetPassword`, param);
+}
+
+// 验证码
+export const getImgApi = () => {
+    return request.post('/api/sysUser/getImage');
+}
+
+// 登录
+export const loginApi = (param: LoginType) => {
+    return request.post('/api/sysUser/login', param);
+}
+
+// 查询菜单树
+export const getAssignTreeApi = (parm: AssignParm) => {
+    return request.get('/api/sysUser/getAssignTree', parm);
 }
