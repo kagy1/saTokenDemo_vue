@@ -28,3 +28,9 @@ export interface RoleItem {
     createTime: string | null
     updateTime: string | null
 }
+
+// 分配菜单数据类型
+export type SaveMenuParam = {
+    roleId: string
+    list: Array<String>
+}

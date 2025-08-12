@@ -41,6 +41,6 @@ export const loginApi = (param: LoginType) => {
 }
 
 // 查询菜单树
-export const getAssignTreeApi = (parm: AssignParm) => {
-    return request.get('/api/sysUser/getAssignTree', parm);
+export const getAssignTreeApi = (param: AssignParm) => {
+    return request.get('/api/sysUser/getAssignTree', param);
 }

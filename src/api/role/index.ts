@@ -1,5 +1,5 @@
 import { request } from "@/http/index";
-import type { RoleListParam, SysRole } from "./type";
+import type { RoleListParam, SaveMenuParam, SysRole } from "./type";
 
 // 定义分页列表响应类型
 interface PageResponse<T = any> {
@@ -30,4 +30,9 @@ export const deleteRoleApi = (roleId: string) => {
 
 export const getSelectApi = () => {
     return request.post("/api/role/selectList");
+}
+
+// 分配权限菜单保存
+export const saveRoleMenuApi = (param: SaveMenuParam) => {
+    return request.post("/api/role/saveRoleMenu", param);
 }

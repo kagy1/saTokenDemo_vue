@@ -1,8 +1,8 @@
-// utils/assignTree.js
+import { saveRoleMenuApi } from '@/api/role';
 import { getAssignTreeApi } from '@/api/user';
 import { useUserStore } from '@/stores/userStote'
 import { ElMessage, ElMessageBox, ElTree } from 'element-plus'
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 
 const assignTreeData = ref({
     list: [],
@@ -32,11 +32,19 @@ const getAssignTree = async (): Promise<void> => {
     }
 }
 
+// 提交数据
+const commitParam = ref({
+    roleId: '',
+    list: [] as string[]
+})
+
 export const showAssignTree = async (roleId: string, roleName: string) => {
     assignTreeData.value.list = []
     assignTreeData.value.assignTreeChecked = []
     params.value.userId = store.getUserInfo().userId
     params.value.roleId = roleId
+
+    commitParam.value.roleId = roleId
 
     // 获取树数据
     await getAssignTree()
@@ -51,12 +59,27 @@ export const showAssignTree = async (roleId: string, roleName: string) => {
         closeOnPressEscape: false,
         beforeClose: async (action, instance, done) => {
             if (action === 'confirm') {
-                // 保存权限
-                // const success = await saveAssign()
-                // if (success) {
-                //     done()
-                // }
-                // 如果保存失败，不关闭弹窗
+                // 确保树组件已经渲染完成
+                await nextTick()
+
+                const checkIds = treeRef.value?.getCheckedKeys() || []
+                const halfCheckIds = treeRef.value?.getHalfCheckedKeys() || []
+                let ids = [...checkIds, ...halfCheckIds] // 使用展开运算符
+
+                commitParam.value.list = ids as string[]
+
+                try {
+                    // 保存权限
+                    const res = await saveRoleMenuApi(commitParam.value)
+
+                    if (res) {
+                        ElMessage.success('权限分配成功')
+                        done()
+                    }
+                } catch (error) {
+                    console.error('保存权限失败:', error)
+                    ElMessage.error('保存权限失败')
+                }
             } else {
                 // 取消时直接关闭
                 done()
@@ -67,6 +90,7 @@ export const showAssignTree = async (roleId: string, roleName: string) => {
                 <ElTree
                     ref={treeRef}
                     data={assignTreeData.value.list}
+                    nodeKey='menuId'
                     props={{
                         children: 'children',
                         label: 'title'
