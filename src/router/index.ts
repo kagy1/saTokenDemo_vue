@@ -1,3 +1,4 @@
+import { useUserStore } from '@/stores/userStote'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -75,6 +76,26 @@ const router = createRouter({
       }
     }
   ],
+})
+
+
+// 全局前置守卫
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore()
+
+  // 不需要登录的页面列表
+  const publicPages = ['/login']
+  const isPublicPage = publicPages.includes(to.path)
+
+  if (!isPublicPage && !userStore.isLoggedIn) {
+    // 需要登录但未登录，跳转到登录页，并保存当前要访问的页面
+    next(`/login?redirect=${to.fullPath}`)
+  } else if (to.path === '/login' && userStore.isLoggedIn) {
+    // 已登录用户访问登录页，重定向到首页
+    next('/')
+  } else {
+    next() // 允许访问
+  }
 })
 
 export default router

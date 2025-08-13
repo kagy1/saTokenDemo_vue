@@ -1,3 +1,4 @@
+import { useUserStore } from '@/stores/userStote'
 import axios, {
     type AxiosResponse,
     type AxiosError,
@@ -6,6 +7,7 @@ import axios, {
 } from 'axios'
 import { ElMessage, ElLoading } from 'element-plus'
 import type { LoadingInstance } from 'element-plus/es/components/loading/src/loading'
+import router from '@/router' // 导入路由实例
 
 // 定义响应数据类型
 interface ApiResponse<T = any> {
@@ -56,31 +58,35 @@ const service = axios.create({
     withCredentials: true
 })
 
-// Token管理
+// Token管理 - 使用Pinia store
 const TokenManager = {
     getToken(): string | null {
-        return localStorage.getItem('token') || sessionStorage.getItem('token')
-    },
-
-    setToken(token: string, remember = false): void {
-        if (remember) {
-            localStorage.setItem('token', token)
-        } else {
-            sessionStorage.setItem('token', token)
+        // 在请求拦截器中使用store时需要确保在组件上下文中
+        try {
+            const userStore = useUserStore()
+            return userStore.getToken()
+        } catch {
+            // 如果无法获取store（比如在非Vue组件上下文中），返回null
+            return null
         }
     },
 
     removeToken(): void {
-        localStorage.removeItem('token')
-        sessionStorage.removeItem('token')
+        try {
+            const userStore = useUserStore()
+            userStore.logout()
+        } catch {
+            // 如果无法获取store，静默处理
+            console.warn('无法清除token，store未初始化')
+        }
     }
 }
 
 // 跳转登录页
 const redirectToLogin = (): void => {
     TokenManager.removeToken()
-    if (window.location.pathname !== '/login') {
-        window.location.href = '/login'
+    if (router.currentRoute.value.path !== '/login') {
+        router.push('/login')
     }
 }
 

@@ -134,11 +134,8 @@ export default defineComponent({
                     type: "warning",
                 }
             ).then(() => {
-                // 清除用户信息
-                userStore.clearUserInfo();
-                // 跳转到登录页
-                router.push("/login");
-                ElMessage.success("退出登录成功");
+                // 清除用户信息并跳转
+                userStore.logout();
             }).catch(() => {
                 // 用户取消退出
             });

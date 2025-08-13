@@ -41,6 +41,7 @@ import {
 } from "element-plus";
 import { onMounted, ref } from "vue";
 import { useUserStore } from "@/stores/userStote";
+import { useRoute, useRouter } from "vue-router";
 
 const form = ref<FormInstance>();
 
@@ -71,6 +72,9 @@ const getImg = async () => {
     }
 }
 
+const router = useRouter()
+const route = useRoute()
+
 // 登录
 const login = async () => {
     if (!form.value) return;
@@ -84,7 +88,13 @@ const login = async () => {
             if (res) {
                 store.setUserId(res.userId);
                 store.setNickName(res.nickName);
+                store.setToken(res.token);
                 ElMessage.success('登录成功');
+
+                // 登录成功后跳转
+                // 如果有重定向地址，跳转到重定向地址，否则跳转到首页
+                const redirect = route.query.redirect as string
+                router.push(redirect || '/')
             }
         }
     } catch (error) {
