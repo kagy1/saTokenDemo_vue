@@ -334,6 +334,20 @@ export default defineComponent({
                         <ElTableColumn label="路由地址" prop="path"></ElTableColumn>
                         <ElTableColumn label="组件路径" prop="url"></ElTableColumn>
                         <ElTableColumn label="序号" prop="orderNum"></ElTableColumn>
+                        <ElTableColumn label="是否显示" prop="visible">
+                            {{
+                                default: (scope: any) => {
+                                    return scope.row.visible ? <ElTag type='success' size="default">显示</ElTag> : <ElTag type='info' size="default">隐藏</ElTag>
+                                }
+                            }}
+                        </ElTableColumn>
+                        <ElTableColumn label="是否添加到选项卡" prop="keepTab">
+                            {{
+                                default: (scope: any) => {
+                                    return scope.row.keepTab ? <ElTag type='success' size="default">是</ElTag> : <ElTag type='info' size="default">否</ElTag>
+                                }
+                            }}
+                        </ElTableColumn>
                         <ElTableColumn label="操作" width="250px" align='center'>
                             {{
                                 default: (scope: any) => (

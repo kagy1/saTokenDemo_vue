@@ -24,6 +24,7 @@ export const useUserStore = defineStore('userStore', () => {
     const clearUserInfo = () => {
         userId.value = ''
         nickName.value = ''
+        sessionStorage.removeItem('user-store')
     }
 
     const getUserInfo = () => {

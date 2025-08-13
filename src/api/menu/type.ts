@@ -11,4 +11,6 @@ export type MenuType = {
     icon: string;
     parentName: string;
     orderNum: string;
+    visible?: boolean;
+    keepTab?: boolean;
 };

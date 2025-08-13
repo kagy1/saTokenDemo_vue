@@ -20,9 +20,9 @@ const router = createRouter({
       meta: {
         title: '登录',
         icon: 'House',
-        keepTab: true
+        keepTab: true,
+        visible: false
       }
-
     },
     {
       name: 'TestDemo',
@@ -43,7 +43,8 @@ const router = createRouter({
           }
         }
       ]
-    }, {
+    },
+    {
       path: '/Manager',
       name: 'Manager',
       redirect: '/Manager/user',

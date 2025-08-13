@@ -37,7 +37,18 @@ export default defineComponent({
                 if (!route.meta?.title) {
                     return false;
                 }
+                // 添加对 visible 字段的检查，默认为 true
+                if (route.meta?.visible === false) {
+                    return false;
+                }
                 return true;
+            });
+        }
+
+        // 过滤子路由菜单
+        const getMenuChildren = (children: any[]) => {
+            return children.filter(child => {
+                return child.meta?.visible !== false;
             });
         }
 
@@ -54,6 +65,11 @@ export default defineComponent({
                     {getMenuRoutes().map((route, index) => {
                         // 如果路由有子路由，渲染为 SubMenu
                         if (route.children && route.children.length > 0) {
+                            const visibleChildren = getMenuChildren(route.children);
+                            // 如果没有可显示的子路由，则不渲染父级菜单
+                            if (visibleChildren.length === 0) {
+                                return null;
+                            }
                             return (
                                 <ElSubMenu index={String(index)} key={index}>
                                     {{
@@ -63,7 +79,7 @@ export default defineComponent({
                                                 <span class={style.menuSpan}>{route.meta?.title as string}</span>
                                             </>
                                         ),
-                                        default: () => route.children?.map(routeChild => (
+                                        default: () => visibleChildren.map(routeChild => (
                                             <ElMenuItem
                                                 index={routeChild.name as string}
                                                 onClick={() => toPage(routeChild)}

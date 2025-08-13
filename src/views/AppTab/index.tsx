@@ -1,4 +1,3 @@
-// components/AppTab.tsx
 import { defineComponent, computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTabStore } from '@/stores/tabStore'
