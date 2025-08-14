@@ -1,5 +1,9 @@
 <template>
-    <div class="common-layout">
+    <!-- 如果是登录页面，只显示内容 -->
+    <div v-if="isLoginPage" class="login-layout">
+        <Login />
+    </div>
+    <div v-else class="common-layout">
         <el-container>
             <el-header class="header">
                 <Header />
@@ -29,7 +33,13 @@ import Header from "./Header";
 import AppHeader from "./AppHeader";
 import AppNavbar from "./AppNavbar";
 import AppMain from "./AppMain";
-import AppTab from "./AppTab"; 
+import AppTab from "./AppTab";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import Login from '@/views/login/index.vue'
+
+const route = useRoute()
+const isLoginPage = computed(() => route.path === '/login')
 </script>
 
 <style lang='scss' scoped>
@@ -84,5 +94,13 @@ import AppTab from "./AppTab";
 .tab-container {
     height: 32px;
     flex-shrink: 0;
+}
+
+.login-layout {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
 }
 </style>

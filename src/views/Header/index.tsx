@@ -1,4 +1,4 @@
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElAvatar, ElMessage, ElMessageBox, ElForm, ElFormItem, ElInput } from "element-plus";
 import { User, Key, SwitchButton } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
@@ -11,9 +11,11 @@ export default defineComponent({
         const router = useRouter();
         const userStore = useUserStore();
 
-        // 获取用户信息
-        const userInfo = userStore.getUserInfo();
-        const userName = userInfo?.nickName || "用户";
+        // 使用计算属性来响应式地获取用户信息
+        const userName = computed(() => {
+            const userInfo = userStore.getUserInfo();
+            return userInfo?.nickName || "用户";
+        });
 
         // 处理修改密码
         const handleChangePassword = () => {
@@ -163,10 +165,10 @@ export default defineComponent({
                                         class={style.avatar}
                                     >
                                         {{
-                                            default: () => userName.charAt(0).toUpperCase()
+                                            default: () => userName.value.charAt(0).toUpperCase()
                                         }}
                                     </ElAvatar>
-                                    <span class={style.userName}>{userName}</span>
+                                    <span class={style.userName}>{userName.value}</span>
                                 </div>
                             ),
                             dropdown: () => (

@@ -21,7 +21,7 @@ const router = createRouter({
       meta: {
         title: '登录',
         icon: 'House',
-        keepTab: true,
+        keepTab: false,
         visible: false
       }
     },

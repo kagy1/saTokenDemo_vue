@@ -125,7 +125,7 @@ onMounted(() => {
     background-color: #fff;
     background: url("@/assets/loginBackImg.jpg");
     background-size: cover;
-    background-position: center;
+    background-position: top;
     display: flex;
     justify-content: center;
     align-items: center;
