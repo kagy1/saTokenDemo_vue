@@ -1,4 +1,4 @@
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElAvatar, ElMessage, ElMessageBox, ElForm, ElFormItem, ElInput } from "element-plus";
 import { User, Key, SwitchButton } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
@@ -10,11 +10,12 @@ export default defineComponent({
     setup() {
         const router = useRouter();
         const userStore = useUserStore();
+        const isLogin = computed(() => userStore.isLoggedIn);
 
         // 使用计算属性来响应式地获取用户信息
         const userName = computed(() => {
-            const userInfo = userStore.getUserInfo();
-            return userInfo?.nickName || "用户";
+            const nickName = userStore.getNickName();
+            return nickName || "用户";
         });
 
         // 处理修改密码
@@ -29,6 +30,8 @@ export default defineComponent({
 
             // 表单引用
             const formRef = ref();
+
+
 
             // 表单验证规则
             const validateNewPassword = (rule: any, value: string, callback: Function) => {
@@ -143,60 +146,85 @@ export default defineComponent({
             });
         };
 
+        const handleNotLoginClick = () => {
+            router.push('/login'); // 根据你的登录页路由调整
+        };
+
         return () => (
             <header class={style.header}>
                 <span class={style.title}>saToken Demo</span>
                 <div class={style.userActions}>
-                    <ElDropdown
-                        trigger="click"
-                        onCommand={(command) => {
-                            if (command === "changePassword") {
-                                handleChangePassword();
-                            } else if (command === "logout") {
-                                handleLogout();
-                            }
-                        }}
-                    >
-                        {{
-                            default: () => (
-                                <div class={style.userInfo}>
-                                    <ElAvatar
-                                        size={32}
-                                        class={style.avatar}
-                                    >
-                                        {{
-                                            default: () => userName.value.charAt(0).toUpperCase()
-                                        }}
-                                    </ElAvatar>
-                                    <span class={style.userName}>{userName.value}</span>
-                                </div>
-                            ),
-                            dropdown: () => (
-                                <ElDropdownMenu>
-                                    <ElDropdownItem command="changePassword">
-                                        {{
-                                            default: () => (
-                                                <div class={style.menuItem}>
-                                                    <Key class={style.icon} />
-                                                    <span>修改密码</span>
-                                                </div>
-                                            )
-                                        }}
-                                    </ElDropdownItem>
-                                    <ElDropdownItem command="logout" divided>
-                                        {{
-                                            default: () => (
-                                                <div class={style.menuItem}>
-                                                    <SwitchButton class={style.icon} />
-                                                    <span>退出登录</span>
-                                                </div>
-                                            )
-                                        }}
-                                    </ElDropdownItem>
-                                </ElDropdownMenu>
-                            )
-                        }}
-                    </ElDropdown>
+                    {isLogin.value ? (
+                        // 已登录：显示下拉菜单
+                        <ElDropdown
+                            trigger="click"
+                            onCommand={(command) => {
+                                if (command === "changePassword") {
+                                    handleChangePassword();
+                                } else if (command === "logout") {
+                                    handleLogout();
+                                }
+                            }}
+                        >
+                            {{
+                                default: () => (
+                                    <div class={style.userInfo}>
+                                        <ElAvatar
+                                            size={32}
+                                            class={style.avatar}
+                                        >
+                                            {{
+                                                default: () => userName.value.charAt(0).toUpperCase()
+                                            }}
+                                        </ElAvatar>
+                                        <span class={style.userName}>{userName.value}</span>
+                                    </div>
+                                ),
+                                dropdown: () => (
+                                    <ElDropdownMenu>
+                                        <ElDropdownItem command="changePassword">
+                                            {{
+                                                default: () => (
+                                                    <div class={style.menuItem}>
+                                                        <Key class={style.icon} />
+                                                        <span>修改密码</span>
+                                                    </div>
+                                                )
+                                            }}
+                                        </ElDropdownItem>
+                                        <ElDropdownItem command="logout" divided>
+                                            {{
+                                                default: () => (
+                                                    <div class={style.menuItem}>
+                                                        <SwitchButton class={style.icon} />
+                                                        <span>退出登录</span>
+                                                    </div>
+                                                )
+                                            }}
+                                        </ElDropdownItem>
+                                    </ElDropdownMenu>
+                                )
+                            }}
+                        </ElDropdown>
+                    ) : (
+                        // 未登录：显示可点击的用户信息，点击跳转登录页
+                        <div
+                            class={[style.userInfo, style.notLoginUserInfo]}
+                            onClick={() => {
+                                handleNotLoginClick()
+                            }}
+                        >
+                            <ElAvatar
+                                size={32}
+                                class={style.avatar}
+                            >
+                                {{
+                                    default: () => <User />
+                                }}
+                            </ElAvatar>
+                            <span class={style.userName}>未登录</span>
+                        </div>
+                    )}
                 </div>
             </header>
         );

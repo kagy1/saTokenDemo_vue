@@ -30,13 +30,8 @@ router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
   const menuStore = useMenuStore()
 
-  // 先初始化用户信息（从持久化存储中恢复）
-  if (!userStore.isLoggedIn) {
-    userStore.initUserInfo()
-  }
-
   // 不需要登录的页面列表
-  const publicPages = ['/login']
+  const publicPages = ['/login', '/']
   const isPublicPage = publicPages.includes(to.path)
 
   if (!isPublicPage && !userStore.isLoggedIn) {
@@ -45,7 +40,8 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  if (to.path === '/login' && userStore.isLoggedIn) {
+  const token = userStore.getToken()
+  if (to.path === '/login' && userStore.isLoggedIn && token) {
     // 已登录用户访问登录页，重定向到首页
     next('/')
     return
@@ -54,7 +50,7 @@ router.beforeEach(async (to, from, next) => {
   if (userStore.isLoggedIn && !dynamicRoutesLoaded) {
     // 已登录但还没有加载动态路由
     try {
-      await menuStore.getMenuList(router, userStore.getUserInfo().userId)
+      await menuStore.getMenuList(router, userStore.getUserId())
       dynamicRoutesLoaded = true
 
       // 如果当前路径是根路径，重定向到第一个有权限的菜单

@@ -1,3 +1,4 @@
+import { getInfoApi } from "@/api/user";
 import router from "@/router";
 import { ElMessage } from "element-plus";
 import { defineStore } from "pinia";
@@ -7,9 +8,10 @@ export const useUserStore = defineStore('userStore', () => {
     const userId = ref('')
     const nickName = ref('')
     const token = ref('')
+    const codeList = ref<string[]>([])
 
     // 计算属性：检查是否已登录
-    const isLoggedIn = computed(() => !!userId.value)
+    const isLoggedIn = computed(() => token.value)
 
     const setUserId = (id: string) => {
         userId.value = id
@@ -41,10 +43,30 @@ export const useUserStore = defineStore('userStore', () => {
         router.push('/login')
     }
 
-    const getUserInfo = () => {
-        return {
-            userId: userId.value,
-            nickName: nickName.value
+    const getUserId = () => {
+        return userId.value
+    }
+
+    const getNickName = () => {
+        return nickName.value
+    }
+
+    const getUserInfo = async () => {
+        try {
+            let res = await getInfoApi(userId.value)
+            if (res) {
+                // 根据后端返回的数据结构更新
+                codeList.value = res.permissions || []
+                if (res.name && res.userId) {
+                    setUserInfo({
+                        userId: res.userId.toString(), // 确保是字符串
+                        nickName: res.name
+                    })
+                }
+            }
+        } catch (error) {
+            console.error('获取用户信息失败:', error)
+            ElMessage.error('获取用户信息失败')
         }
     }
 
@@ -52,14 +74,8 @@ export const useUserStore = defineStore('userStore', () => {
         return token.value
     }
 
-    // 初始化用户信息（页面刷新时恢复状态）
-    const initUserInfo = () => {
-        const savedUserInfo = localStorage.getItem('userInfo')
-        const savedLoginStatus = localStorage.getItem('isLoggedIn')
-
-        if (savedUserInfo && savedLoginStatus === 'true') {
-            setUserInfo(JSON.parse(savedUserInfo))
-        }
+    const getCodeList = () => {
+        return codeList.value
     }
 
     return {
@@ -74,8 +90,10 @@ export const useUserStore = defineStore('userStore', () => {
         clearUserInfo,
         logout,
         getUserInfo,
+        getUserId,
+        getNickName,
         getToken,
-        initUserInfo
+        getCodeList
     }
 }, {
     persist: {

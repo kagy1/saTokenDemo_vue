@@ -47,3 +47,10 @@ export type UpdateParam = {
     password: string
     oldPassword: string
 }
+
+// 用户信息类型（对应后端 UserInfo 类）
+export interface UserInfo {
+    name: string
+    userId: number
+    permissions: string[] 
+}

@@ -41,7 +41,7 @@ const commitParam = ref({
 export const showAssignTree = async (roleId: string, roleName: string) => {
     assignTreeData.value.list = []
     assignTreeData.value.assignTreeChecked = []
-    params.value.userId = store.getUserInfo().userId
+    params.value.userId = store.getUserId()
     params.value.roleId = roleId
 
     commitParam.value.roleId = roleId

@@ -131,7 +131,7 @@ router.beforeEach(async (to, from, next) => {
   if (userStore.isLoggedIn && !dynamicRoutesLoaded) {
     // 已登录但还没有加载动态路由
     try {
-      await menuStore.getMenuList(router, userStore.getUserInfo().userId)
+      await menuStore.getMenuList(router, userStore.getUserId())
       dynamicRoutesLoaded = true
 
       // 如果当前路径是根路径，重定向到第一个有权限的菜单

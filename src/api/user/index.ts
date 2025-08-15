@@ -1,6 +1,5 @@
 import { request } from "@/http";
-import type { SysUser, UserListParam, LoginType, AssignParam, UpdateParam } from '@/api/user/type';
-
+import type { SysUser, UserListParam, LoginType, AssignParam, UpdateParam, UserInfo } from '@/api/user/type';
 interface PageResponse<T = any> {
     records: T[];
     total: number;
@@ -48,4 +47,9 @@ export const getAssignTreeApi = (param: AssignParam) => {
 // 更新密码
 export const updatePasswordApi = (param: UpdateParam) => {
     return request.post('/api/sysUser/updatePassword', param);
+}
+
+// 获取用户信息
+export const getInfoApi = (userId: string): Promise<UserInfo> => {
+    return request.get('/api/sysUser/getInfo', { userId: userId })
 }
