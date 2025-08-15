@@ -3,6 +3,7 @@ import router from "@/router";
 import { ElMessage } from "element-plus";
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
+import { useTabStore } from "./tabStore";
 
 export const useUserStore = defineStore('userStore', () => {
     const userId = ref('')
@@ -40,6 +41,8 @@ export const useUserStore = defineStore('userStore', () => {
     const logout = () => {
         clearUserInfo()
         ElMessage.success('退出登录成功')
+        const tabStore = useTabStore()
+        tabStore.closeAllTabsExceptHome()
         router.push('/login')
     }
 

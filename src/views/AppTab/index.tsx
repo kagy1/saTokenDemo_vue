@@ -20,6 +20,10 @@ export default defineComponent({
 
         const currentTabClosable = computed(() => {
             const tab = tabStore.getTabByName(contextMenuTab.value)
+            // 首页选项卡不可关闭
+            if (tab?.name === 'Main') {
+                return false
+            }
             return tab?.closable !== false
         })
 
@@ -41,6 +45,12 @@ export default defineComponent({
         // 选项卡移除事件
         const handleTabRemove = (tabName: TabPaneName) => {
             const tabNameStr = String(tabName)
+
+            // 禁止关闭首页选项卡
+            if (tabNameStr === 'Main') {
+                return
+            }
+
             const newActiveTab = tabStore.removeTab(tabNameStr)
 
             if (newActiveTab) {
@@ -73,7 +83,7 @@ export default defineComponent({
         const handleContextMenuCommand = (command: string) => {
             switch (command) {
                 case 'closeCurrent':
-                    if (contextMenuTab.value) {
+                    if (contextMenuTab.value && contextMenuTab.value !== 'Main') {
                         handleTabRemove(contextMenuTab.value)
                     }
                     break
@@ -91,17 +101,9 @@ export default defineComponent({
                     }
                     break
                 case 'closeAll':
-                    tabStore.closeAllTabs()
-                    if (tabStore.tabs.length > 0) {
-                        const firstTab = tabStore.tabs[0]
-                        router.push({
-                            name: firstTab.name,
-                            query: firstTab.query,
-                            params: firstTab.params
-                        })
-                    } else {
-                        router.push('/')
-                    }
+                    tabStore.closeAllTabsExceptHome()
+                    // 跳转到首页
+                    router.push('/')
                     break
             }
         }
@@ -124,7 +126,7 @@ export default defineComponent({
                     key={tab.name}
                     label={tab.title}
                     name={tab.name}
-                    closable={tab.closable}
+                    closable={tab.name !== 'Main' && tab.closable !== false}
                 />
             ))
         }

@@ -90,6 +90,20 @@ export const useTabStore = defineStore('tab', () => {
         return tabs.value.find(tab => tab.name === name)
     }
 
+    // 关闭除首页外的所有选项卡
+    const closeAllTabsExceptHome = () => {
+        // 只保留首页选项卡
+        const homeTab = tabs.value.find(tab => tab.name === 'Main')
+        if (homeTab) {
+            tabs.value = [homeTab]
+            activeTab.value = 'Main'
+        } else {
+            // 如果没有首页选项卡，清空所有
+            tabs.value = []
+            activeTab.value = ''
+        }
+    }
+
     return {
         tabs,
         activeTab,
@@ -98,7 +112,8 @@ export const useTabStore = defineStore('tab', () => {
         setActiveTab,
         closeOtherTabs,
         closeAllTabs,
-        getTabByName
+        getTabByName,
+        closeAllTabsExceptHome
     }
 }, {
     persist: {

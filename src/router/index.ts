@@ -14,7 +14,18 @@ const baseRoutes = [
       keepTab: false,
       visible: false
     }
-  }
+  },
+  {
+    path: '/',
+    name: 'Main',
+    component: () => import('@/views/Main/index'),
+    meta: {
+      title: '首页',
+      icon: 'House',
+      visible: true,
+      keepTab: true
+    }
+  },
 ]
 
 const router = createRouter({
@@ -30,37 +41,44 @@ router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
   const menuStore = useMenuStore()
 
-  // 不需要登录的页面列表
+  // 不需要登录的页面列表（首页现在也是公开页面）
   const publicPages = ['/login', '/']
   const isPublicPage = publicPages.includes(to.path)
 
-  if (!isPublicPage && !userStore.isLoggedIn) {
-    // 需要登录但未登录，跳转到登录页
+  // 如果是公开页面，直接放行
+  if (isPublicPage) {
+    // 如果是已登录用户访问登录页，重定向到首页
+    if (to.path === '/login' && userStore.isLoggedIn) {
+      next('/')
+      return
+    }
+
+    // 如果用户已登录且访问首页，确保动态路由已加载（为了侧边栏菜单显示）
+    if (to.path === '/' && userStore.isLoggedIn && !dynamicRoutesLoaded) {
+      try {
+        await menuStore.getMenuList(router, userStore.getUserId())
+        dynamicRoutesLoaded = true
+      } catch (error) {
+        console.error('加载菜单失败:', error)
+        // 即使菜单加载失败，首页仍然可以访问
+      }
+    }
+
+    next()
+    return
+  }
+
+  // 需要权限的页面，检查登录状态
+  if (!userStore.isLoggedIn) {
     next(`/login?redirect=${encodeURIComponent(to.fullPath)}`)
     return
   }
 
-  const token = userStore.getToken()
-  if (to.path === '/login' && userStore.isLoggedIn && token) {
-    // 已登录用户访问登录页，重定向到首页
-    next('/')
-    return
-  }
-
+  // 已登录用户访问需要权限的页面
   if (userStore.isLoggedIn && !dynamicRoutesLoaded) {
-    // 已登录但还没有加载动态路由
     try {
       await menuStore.getMenuList(router, userStore.getUserId())
       dynamicRoutesLoaded = true
-
-      // 如果当前路径是根路径，重定向到第一个有权限的菜单
-      if (to.path === '/') {
-        const firstMenu = findFirstAvailableMenu(menuStore.menuList)
-        if (firstMenu) {
-          next(firstMenu.path)
-          return
-        }
-      }
 
       // 重新导航到目标路由
       next({ ...to, replace: true })
@@ -76,24 +94,9 @@ router.beforeEach(async (to, from, next) => {
   next()
 })
 
-// 查找第一个可用的菜单路径
-function findFirstAvailableMenu(menuList: any[]): any {
-  for (const menu of menuList) {
-    if (menu.meta?.visible !== false) {
-      if (menu.children && menu.children.length > 0) {
-        const childMenu = findFirstAvailableMenu(menu.children)
-        if (childMenu) return childMenu
-      } else if (menu.component) {
-        return menu
-      }
-    }
-  }
-  return null
-}
-
-// 路由离开时的清理
+// 路由离开时
 router.afterEach(() => {
-  // 可以在这里做一些清理工作
+  
 })
 
 export default router
