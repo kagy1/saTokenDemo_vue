@@ -52,6 +52,16 @@ export const useUserStore = defineStore('userStore', () => {
         return token.value
     }
 
+    // 初始化用户信息（页面刷新时恢复状态）
+    const initUserInfo = () => {
+        const savedUserInfo = localStorage.getItem('userInfo')
+        const savedLoginStatus = localStorage.getItem('isLoggedIn')
+
+        if (savedUserInfo && savedLoginStatus === 'true') {
+            setUserInfo(JSON.parse(savedUserInfo))
+        }
+    }
+
     return {
         userId,
         nickName,
@@ -64,7 +74,8 @@ export const useUserStore = defineStore('userStore', () => {
         clearUserInfo,
         logout,
         getUserInfo,
-        getToken
+        getToken,
+        initUserInfo
     }
 }, {
     persist: {

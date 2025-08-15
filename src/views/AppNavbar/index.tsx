@@ -28,16 +28,10 @@ export default defineComponent({
 
         // 过滤菜单路由 - 排除重定向路由和不需要显示的路由
         const getMenuRoutes = () => {
-            return router.options.routes.filter(route => {
-                // 过滤掉重定向路由（没有 component 且有 redirect 的路由）
-                if (route.redirect && !route.component && !route.children) {
-                    return false;
-                }
-                // 过滤掉没有 meta.title 的路由
+            return menuStore.menuList.filter(route => {
                 if (!route.meta?.title) {
                     return false;
                 }
-                // 添加对 visible 字段的检查，默认为 true
                 if (route.meta?.visible === false) {
                     return false;
                 }

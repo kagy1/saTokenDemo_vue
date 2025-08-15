@@ -2,6 +2,84 @@ import { useMenuStore } from '@/stores/menuStore'
 import { useUserStore } from '@/stores/userStote'
 import { createRouter, createWebHistory } from 'vue-router'
 
+// const router = createRouter({
+//   history: createWebHistory(import.meta.env.BASE_URL),
+//   routes: [
+//     {
+//       path: '/',
+//       name: 'Main',
+//       component: () => import('@/views/Main/index'),
+//       meta: {
+//         title: '首页',
+//         icon: 'House',
+//         keepTab: true
+//       }
+//     },
+//     {
+//       path: '/login',
+//       name: 'login',
+//       component: () => import('@/views/login/index.vue'),
+//       meta: {
+//         title: '登录',
+//         icon: 'House',
+//         keepTab: false,
+//         visible: false
+//       }
+//     },
+//     {
+//       name: 'TestDemo',
+//       path: '/TestDemo',
+//       redirect: '/TestDemo/axiosTest',
+//       meta: {
+//         title: '测试',
+//         icon: 'User'
+//       },
+//       children: [
+//         {
+//           path: '/TestDemo/axiosTest',
+//           name: 'axiosTest',
+//           component: () => import('@/views/TestDemo/axiosTest'),
+//           meta: {
+//             title: '测试',
+//             icon: 'User'
+//           }
+//         }
+//       ]
+//     },
+//     {
+//       path: '/Manager',
+//       name: 'Manager',
+//       redirect: '/Manager/user',
+//       children: [
+//         {
+//           path: '/Manager/user',
+//           name: 'user',
+//           component: () => import('@/views/Manager/UserManager'),
+//           meta: {
+//             title: '用户管理',
+//             icon: 'User'
+//           }
+//         }, {
+//           path: '/Manager/role',
+//           name: 'role',
+//           component: () => import('@/views/Manager/RoleManager'),
+//           meta: { title: '角色管理', icon: 'User' }
+//         }, {
+//           path: '/Manager/menu',
+//           name: 'menu',
+//           component: () => import('@/views/Manager/MenuManager'),
+//           meta: { title: '菜单管理', icon: 'User' }
+//         }
+//       ],
+//       meta: {
+//         title: '系统管理',
+//         icon: 'User'
+//       }
+//     }
+//   ],
+// })
+
+
 // 基础路由（不需要权限的路由）
 const baseRoutes = [
   {
@@ -17,7 +95,7 @@ const baseRoutes = [
   },
   {
     path: '/',
-    redirect: '/home'
+    redirect: '/home' // 默认重定向，会在动态路由加载后被覆盖
   }
 ]
 
@@ -33,11 +111,6 @@ let dynamicRoutesLoaded = false
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
   const menuStore = useMenuStore()
-
-  // 先初始化用户信息（从持久化存储中恢复）
-  if (!userStore.isLoggedIn) {
-    userStore.initUserInfo()
-  }
 
   // 不需要登录的页面列表
   const publicPages = ['/login']
