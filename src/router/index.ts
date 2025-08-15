@@ -14,10 +14,6 @@ const baseRoutes = [
       keepTab: false,
       visible: false
     }
-  },
-  {
-    path: '/',
-    redirect: '/home'
   }
 ]
 
