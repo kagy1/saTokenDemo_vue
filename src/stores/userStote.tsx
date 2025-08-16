@@ -1,9 +1,10 @@
-import { getInfoApi } from "@/api/user";
+import { getInfoApi, logoutApi } from "@/api/user";
 import router from "@/router";
 import { ElMessage } from "element-plus";
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { useTabStore } from "./tabStore";
+import { useMenuStore } from "./menuStore";
 
 export const useUserStore = defineStore('userStore', () => {
     const userId = ref('')
@@ -38,12 +39,25 @@ export const useUserStore = defineStore('userStore', () => {
         sessionStorage.removeItem('user-store')
     }
 
-    const logout = () => {
-        clearUserInfo()
-        ElMessage.success('退出登录成功')
-        const tabStore = useTabStore()
-        tabStore.closeAllTabsExceptHome()
-        router.push('/login')
+    const menuStore = useMenuStore()
+
+    const logout = async () => {
+        try {
+            await logoutApi()
+            clearUserInfo()
+            menuStore.clearDynamicRoutes()
+            ElMessage.success('退出登录成功')
+            const tabStore = useTabStore()
+            tabStore.closeAllTabsExceptHome()
+            router.push('/login')
+        } catch (error) {
+            // 即使后端登出失败，也要清除本地状态
+            clearUserInfo()
+            const tabStore = useTabStore()
+            tabStore.closeAllTabsExceptHome()
+            router.push('/login')
+        }
+
     }
 
     const getUserId = () => {

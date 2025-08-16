@@ -33,15 +33,12 @@ const router = createRouter({
   routes: baseRoutes
 })
 
-// 路由加载状态
-let dynamicRoutesLoaded = false
-
 // 全局前置守卫
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
   const menuStore = useMenuStore()
 
-  // 不需要登录的页面列表（首页现在也是公开页面）
+  // 不需要登录的页面列表
   const publicPages = ['/login', '/']
   const isPublicPage = publicPages.includes(to.path)
 
@@ -54,10 +51,10 @@ router.beforeEach(async (to, from, next) => {
     }
 
     // 如果用户已登录且访问首页，确保动态路由已加载（为了侧边栏菜单显示）
-    if (to.path === '/' && userStore.isLoggedIn && !dynamicRoutesLoaded) {
+    // 使用 menuStore.menuList.length 来判断是否已加载菜单
+    if (to.path === '/' && userStore.isLoggedIn && menuStore.menuList.length === 0) {
       try {
         await menuStore.getMenuList(router, userStore.getUserId())
-        dynamicRoutesLoaded = true
       } catch (error) {
         console.error('加载菜单失败:', error)
         // 即使菜单加载失败，首页仍然可以访问
@@ -75,11 +72,10 @@ router.beforeEach(async (to, from, next) => {
   }
 
   // 已登录用户访问需要权限的页面
-  if (userStore.isLoggedIn && !dynamicRoutesLoaded) {
+  // 使用 menuStore.menuList.length 来判断是否已加载菜单
+  if (userStore.isLoggedIn && menuStore.menuList.length === 0) {
     try {
       await menuStore.getMenuList(router, userStore.getUserId())
-      dynamicRoutesLoaded = true
-
       // 重新导航到目标路由
       next({ ...to, replace: true })
     } catch (error) {
@@ -92,11 +88,6 @@ router.beforeEach(async (to, from, next) => {
   }
 
   next()
-})
-
-// 路由离开时
-router.afterEach(() => {
-  
 })
 
 export default router

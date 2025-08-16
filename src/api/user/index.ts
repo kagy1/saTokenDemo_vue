@@ -53,3 +53,8 @@ export const updatePasswordApi = (param: UpdateParam) => {
 export const getInfoApi = (userId: string): Promise<UserInfo> => {
     return request.get('/api/sysUser/getInfo', { userId: userId })
 }
+
+// 登出
+export const logoutApi = () => {
+    return request.post('/api/sysUser/logout');
+}
