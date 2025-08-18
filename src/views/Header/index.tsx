@@ -152,7 +152,7 @@ export default defineComponent({
 
         return () => (
             <header class={style.header}>
-                <span class={style.title}>saToken Demo</span>
+                <span class={style.title}>通用权限认证系统</span>
                 <div class={style.userActions}>
                     {isLogin.value ? (
                         // 已登录：显示下拉菜单

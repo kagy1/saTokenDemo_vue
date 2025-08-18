@@ -27,8 +27,8 @@ const getAssignTree = async (): Promise<void> => {
             assignTreeData.value.assignTreeChecked = result.checkList || []
         }
     } catch (error) {
-        console.error('获取权限树失败:', error)
         ElMessage.error('获取权限树失败')
+        throw error
     }
 }
 
@@ -46,8 +46,9 @@ export const showAssignTree = async (roleId: string, roleName: string) => {
 
     commitParam.value.roleId = roleId
 
-    // 获取树数据
+    // 获取树数据，如果失败则不弹出弹框
     await getAssignTree()
+
 
     return ElMessageBox({
         title: `分配${roleName}权限`,
