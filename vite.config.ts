@@ -5,7 +5,6 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
@@ -17,4 +16,12 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://47.99.77.139:7411',
+        changeOrigin: true,
+      },
+    }
+  }
 })

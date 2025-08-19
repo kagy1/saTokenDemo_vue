@@ -1,3 +1,4 @@
+import { useTabStore } from '@/stores/tabStore';
 import { useMenuStore } from '@/stores/menuStore'
 import { useUserStore } from '@/stores/userStote'
 import { createRouter, createWebHistory } from 'vue-router'
@@ -37,10 +38,16 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
   const menuStore = useMenuStore()
+  const tabStore = useTabStore()
+
 
   // 不需要登录的页面列表
   const publicPages = ['/login', '/']
   const isPublicPage = publicPages.includes(to.path)
+
+  if (!userStore.isLoggedIn) {
+    tabStore.closeAllTabs()
+  }
 
   // 如果是公开页面，直接放行
   if (isPublicPage) {
