@@ -10,51 +10,51 @@ interface PageResponse<T = any> {
 
 // 用户API调用函数
 export const addUserApi = (param: SysUser) => {
-    return request.post("/api/sysUser", param);
+    return request.post("/sysUser", param);
 };
 
 export const getUserListApi = (param: UserListParam): Promise<PageResponse> => {
-    return request.get("/api/sysUser/list", param);
+    return request.get("/sysUser/list", param);
 };
 
 export const editUserApi = (param: SysUser) => {
-    return request.put("/api/sysUser", param);
+    return request.put("/sysUser", param);
 };
 
 export const deleteUserApi = (userId: number) => {
-    return request.delete(`/api/sysUser/${userId}`);
+    return request.delete(`/sysUser/${userId}`);
 };
 
 export const resetPasswordApi = (param: SysUser) => {
-    return request.post(`/api/sysUser/resetPassword`, param);
+    return request.post(`/sysUser/resetPassword`, param);
 }
 
 // 验证码
 export const getImgApi = () => {
-    return request.post('/api/sysUser/getImage');
+    return request.post('/sysUser/getImage');
 }
 
 // 登录
 export const loginApi = (param: LoginType) => {
-    return request.post('/api/sysUser/login', param);
+    return request.post('/sysUser/login', param);
 }
 
 // 查询菜单树
 export const getAssignTreeApi = (param: AssignParam) => {
-    return request.get('/api/sysUser/getAssignTree', param);
+    return request.get('/sysUser/getAssignTree', param);
 }
 
 // 更新密码
 export const updatePasswordApi = (param: UpdateParam) => {
-    return request.post('/api/sysUser/updatePassword', param);
+    return request.post('/sysUser/updatePassword', param);
 }
 
 // 获取用户信息
 export const getInfoApi = (userId: string): Promise<UserInfo> => {
-    return request.get('/api/sysUser/getInfo', { userId: userId })
+    return request.get('/sysUser/getInfo', { userId: userId })
 }
 
 // 登出
 export const logoutApi = () => {
-    return request.post('/api/sysUser/logout');
+    return request.post('/sysUser/logout');
 }

@@ -13,26 +13,26 @@ interface PageResponse<T = any> {
 // 定义角色项类型
 
 export const addRoleApi = (param: SysRole) => {
-    return request.post("/api/role", param);
+    return request.post("/role", param);
 };
 
 export const getListApi = (param: RoleListParam): Promise<PageResponse> => {
-    return request.get("/api/role/getList", param);
+    return request.get("/role/getList", param);
 };
 
 export const editRoleApi = (param: SysRole) => {
-    return request.put("/api/role", param);
+    return request.put("/role", param);
 };
 
 export const deleteRoleApi = (roleId: string) => {
-    return request.delete(`/api/role/${roleId}`,);
+    return request.delete(`/role/${roleId}`,);
 };
 
 export const getSelectApi = () => {
-    return request.post("/api/role/selectList");
+    return request.post("/role/selectList");
 }
 
 // 分配权限菜单保存
 export const saveRoleMenuApi = (param: SaveMenuParam) => {
-    return request.post("/api/role/saveRoleMenu", param);
+    return request.post("/role/saveRoleMenu", param);
 }
